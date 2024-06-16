@@ -1,0 +1,76 @@
+local DrRayLibrary = loadstring(game:HttpGet("https://raw.githubusercontent.com/AZYsGithub/DrRay-UI-Library/main/DrRay.lua"))()
+
+local window = DrRayLibrary:Load("Rinns Hub", "Default")
+
+local tab = DrRayLibrary.newTab("Main Tab", "ImageIdHere")
+
+-- Variables to control the toggles
+local autoFarmActive = false
+local autoRebirthActive = false
+local autoClaimRewardsActive = false
+
+-- Auto Farm function
+local function autoFarm()
+    while autoFarmActive do
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(13889.873046875, 19.92705535888672, -18550.322265625)
+        wait(3)
+    end
+end
+
+-- Auto Rebirth function
+local function autoRebirth()
+    while autoRebirthActive do
+        game:GetService("ReplicatedStorage"):WaitForChild("RebirthEvent"):FireServer()
+        wait(1) -- Adjust the wait time if needed
+    end
+end
+
+-- Auto Claim Rewards function
+local function autoClaimRewards()
+    while autoClaimRewardsActive do
+        for i = 1, 12 do
+            local args = {
+                [1] = "TimeGift",
+                [2] = tostring(i)
+            }
+            game:GetService("ReplicatedStorage"):WaitForChild("Recv"):InvokeServer(unpack(args))
+        end
+        wait(1) -- Adjust the wait time if needed
+    end
+end
+
+-- Toggle for Auto Farm
+tab.newToggle("Auto Farm", "Farms Trophies for you", true, function(toggleState)
+    autoFarmActive = toggleState
+    if toggleState then
+        print("Auto Farm On")
+        -- Start Auto Farm in a new thread to avoid blocking
+        spawn(autoFarm)
+    else
+        print("Auto Farm Off")
+    end
+end)
+
+-- Toggle for Auto Rebirth
+tab.newToggle("Auto Rebirth", "Rebirths for you when you have enough Trophies", true, function(toggleState)
+    autoRebirthActive = toggleState
+    if toggleState then
+        print("Auto Rebirth On")
+        -- Start Auto Rebirth in a new thread to avoid blocking
+        spawn(autoRebirth)
+    else
+        print("Auto Rebirth Off")
+    end
+end)
+
+-- Toggle for Auto Claim Rewards
+tab.newToggle("Auto Claim Rewards", "Auto claims the Time Rewards for you", true, function(toggleState)
+    autoClaimRewardsActive = toggleState
+    if toggleState then
+        print("Auto Claim Rewards On")
+        -- Start Auto Claim Rewards in a new thread to avoid blocking
+        spawn(autoClaimRewards)
+    else
+        print("Auto Claim Rewards Off")
+    end
+end)
